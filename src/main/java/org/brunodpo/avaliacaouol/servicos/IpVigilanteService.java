@@ -18,8 +18,11 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class IpVigilanteService implements InitializingBean {
 	
-	@Value("${ipvigilante.url}/json/{ip}")
+	@Value("${ipvigilante.url}/json")
 	private String url;
+
+	@Value("${ipvigilante.url}/json/{ip}")
+	private String urlIp;
 	
 	@Autowired
 	RestTemplate restTemplate;
@@ -27,7 +30,11 @@ public class IpVigilanteService implements InitializingBean {
 	public IpVigilanteInfo obterInformacoes(String ip) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("ip", ip);
-		return restTemplate.getForObject(url, IpVigilanteInfo.class, params);
+		return restTemplate.getForObject(urlIp, IpVigilanteInfo.class, params);
+	}
+	
+	public IpVigilanteInfo obterInformacoesLocais() {
+		return restTemplate.getForObject(url, IpVigilanteInfo.class);		
 	}
 
 	@Override

@@ -19,15 +19,15 @@ Com o IP da requisição em mãos, foi necessário realizar uma chamada ao IpVig
 Foram realizadas apenas validações básicas. É necessário, por exemplo, realizar uma checagem do retorno das APIs externas a fim de contornar os possíveis problemas, como indisponibilidade. Porém o foco aqui foi apenas verificar a existência ou não do cliente e variar os retornos, de acordo com os códigos HTTP corretos.
 
 ### Próximos passos
-Como próximos passos, posso citar que o mais importante é a escolha de um repositório como o [GitHub](https://github.com/). Criarei um repositório privado com esse projeto e caso necessário, basta passar o usuário para acesso.
-Será necessário também escolher uma solução de CI/CD, como por exemplo o [Jenkins](https://jenkins.io/) para criar um pipeline de build e deploy para os ambientes.
+Como próximos passos, será necessário escolher uma solução de CI/CD, como por exemplo o [Jenkins](https://jenkins.io/) para criar um pipeline de build e deploy para os ambientes.
 Além disso, ficou faltando o preenchimento dos testes unitários. Porém, estou ciente de que é imprescindível para validar cada build no processo de CI.
 Outro passo que posso citar são os testes integrados, que poderia ser realizado utilizando, por exemplo, o [Selenium](https://www.seleniumhq.org/).
+Por fim, por ser uma API de cadastro, um pr[oximo passo seria a implementação da camada de segurança (autenticação e autorização).
 
 ## Endpoints
 Os endpoints criados para esse exemplo foram:
 
-GET    /Cliente/?id={id} - Obtém um cliente através do seu ID
-POST   /Cliente          - Cria um novo cliente
-PUT    /Cliente/{id}/    - Altera as informações do cliente
-DELETE /Cliente/{id}/    - Apaga um cliente através de seu ID
+GET - /Cliente/?id={id} - Obtém um cliente através do seu ID
+POST - /Cliente - Cria um novo cliente
+PUT - /Cliente/{id}/ - Altera as informações do cliente
+DELETE - /Cliente/{id}/ - Apaga um cliente através de seu ID

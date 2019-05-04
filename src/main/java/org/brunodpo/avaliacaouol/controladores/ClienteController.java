@@ -62,17 +62,25 @@ public class ClienteController {
 			@RequestParam(value="idade", required=true) Integer idade) {
 		// Obtém a localização pelo IP da requisição
 		String ipChamador = request.getRemoteAddr();
-		if (ipChamador.equals("127.0.0.1"))
-			ipChamador = "191.8.55.30";
-		//IpVigilanteResult ipVigilante = ipVigilanteService.obterInformacoes("191.8.55.30");
-		IpVigilanteInfo ipVigilante = ipVigilanteService.obterInformacoes(ipChamador);
+		
+		// Verifica se o chamador e o servidor estão no mesmo local
+		IpVigilanteInfo ipVigilante = null;
+		if (ipChamador.equals("127.0.0.1")) {
+			ipVigilante = ipVigilanteService.obterInformacoesLocais();
+		} else {
+			ipVigilante = ipVigilanteService.obterInformacoes(ipChamador);
+		}
+		if (ipVigilante == null) {
+			return new ResponseEntity<Cliente>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
 		// Obtém o local mais próximo com informação de clima
 		MetaWeatherLocation local = metaWeatherService.obterLocalizacaoMaisProxima(ipVigilante.getData().getLatitude(), ipVigilante.getData().getLongitude());
 		// Obtém as informações de clima desse local
 		MetaWeatherInfo clima = metaWeatherService.obterClima(local.getWoeid());
 
 		// Cria o cliente baseado nas informações recebitas e coletadas nas APIs
-		Cliente cliente = new Cliente(nome, idade, ipChamador, clima.getConsolidated_weather()[0].getMin_temp(), clima.getConsolidated_weather()[0].getMax_temp());
+		Cliente cliente = new Cliente(nome, idade, ipVigilante.getData().getIpv4(), clima.getConsolidated_weather()[0].getMin_temp(), clima.getConsolidated_weather()[0].getMax_temp());
 		clienteRepository.save(cliente);
 		return new ResponseEntity<Cliente>(cliente, HttpStatus.CREATED);
 	}
