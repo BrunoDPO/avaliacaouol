@@ -22,12 +22,12 @@ Foram realizadas apenas validações básicas. É necessário, por exemplo, real
 Como próximos passos, será necessário escolher uma solução de CI/CD, como por exemplo o [Jenkins](https://jenkins.io/) para criar um pipeline de build e deploy para os ambientes.
 Além disso, ficou faltando o preenchimento dos testes unitários. Porém, estou ciente de que é imprescindível para validar cada build no processo de CI.
 Outro passo que posso citar são os testes integrados, que poderia ser realizado utilizando, por exemplo, o [Selenium](https://www.seleniumhq.org/).
-Por fim, por ser uma API de cadastro, um pr[oximo passo seria a implementação da camada de segurança (autenticação e autorização).
+Por fim, por ser uma API de cadastro, um próoximo passo seria a implementação da camada de segurança (autenticação e autorização).
 
 ## Endpoints
 Os endpoints criados para esse exemplo foram:
 
-GET - /Cliente/?id={id} - Obtém um cliente através do seu ID
-POST - /Cliente - Cria um novo cliente
-PUT - /Cliente/{id}/ - Altera as informações do cliente
-DELETE - /Cliente/{id}/ - Apaga um cliente através de seu ID
+* GET - /Cliente/?id={id} - Obtém um cliente através do seu ID
+* POST - /Cliente - Cria um novo cliente
+* PUT - /Cliente/{id}/ - Altera as informações do cliente
+* DELETE - /Cliente/{id}/ - Apaga um cliente através de seu ID
