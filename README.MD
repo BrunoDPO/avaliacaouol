@@ -27,7 +27,9 @@ Por fim, por ser uma API de cadastro, um próoximo passo seria a implementação
 ## Endpoints
 Os endpoints criados para esse exemplo foram:
 
-* GET - /Cliente/?id={id} - Obtém um cliente através do seu ID
-* POST - /Cliente - Cria um novo cliente
-* PUT - /Cliente/{id}/ - Altera as informações do cliente
-* DELETE - /Cliente/{id}/ - Apaga um cliente através de seu ID
+* `GET - /api/cliente/{id}` - Obtém um cliente através do seu ID
+* `POST - /api/cliente` - Cria um novo cliente
+  Body: `{ "nome": "string", "idade": int }`
+* `PUT - /api/cliente/{id}` - Altera as informações do cliente
+  Body: `{ "nome": "string", "idade": int }`
+* `DELETE - /api/Cliente/{id}` - Apaga um cliente através de seu ID

@@ -2,6 +2,7 @@ package org.brunodpo.avaliacaouol;
 
 import java.util.Properties;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -27,5 +28,13 @@ public class Application {
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
+	}
+	
+	/**
+	 * Referência dinâmica para o mapeador de entidades
+	 */
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
 	}
 }

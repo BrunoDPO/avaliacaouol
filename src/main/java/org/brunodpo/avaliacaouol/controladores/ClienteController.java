@@ -8,15 +8,19 @@ import org.brunodpo.avaliacaouol.entidades.Cliente;
 import org.brunodpo.avaliacaouol.entidades.ipvigilante.IpVigilanteInfo;
 import org.brunodpo.avaliacaouol.entidades.metaweather.MetaWeatherInfo;
 import org.brunodpo.avaliacaouol.entidades.metaweather.MetaWeatherLocation;
+import org.brunodpo.avaliacaouol.modelos.ClienteInfoModel;
+import org.brunodpo.avaliacaouol.modelos.ClienteModel;
 import org.brunodpo.avaliacaouol.repositorios.ClienteRepository;
 import org.brunodpo.avaliacaouol.servicos.IpVigilanteService;
 import org.brunodpo.avaliacaouol.servicos.MetaWeatherService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -31,6 +35,12 @@ public class ClienteController {
 	 */
 	@Autowired
 	private HttpServletRequest request;
+	
+	/**
+	 * Objeto referente ao mapeamento de entidades
+	 */
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	/**
 	 * Repositório de cliente
@@ -52,14 +62,12 @@ public class ClienteController {
 	
 	/**
 	 * Cria um cliente
-	 * @param nome Nome do cliente
-	 * @param idade Idade do cliente
+	 * @param novo Novo cliente
 	 * @return Entidade do cliente
 	 */
-	@RequestMapping(path = "/cliente", method = RequestMethod.POST)
-	public ResponseEntity<Cliente> incluir(
-			@RequestParam(value="nome", required=true) String nome,
-			@RequestParam(value="idade", required=true) Integer idade) {
+	@RequestMapping(path = "/api/cliente", method = RequestMethod.POST)
+	public ResponseEntity<ClienteInfoModel> incluir(
+			@RequestBody(required = true) ClienteModel novo) {
 		// Obtém a localização pelo IP da requisição
 		String ipChamador = request.getRemoteAddr();
 		
@@ -71,7 +79,7 @@ public class ClienteController {
 			ipVigilante = ipVigilanteService.obterInformacoes(ipChamador);
 		}
 		if (ipVigilante == null) {
-			return new ResponseEntity<Cliente>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<ClienteInfoModel>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		// Obtém o local mais próximo com informação de clima
@@ -80,9 +88,10 @@ public class ClienteController {
 		MetaWeatherInfo clima = metaWeatherService.obterClima(local.getWoeid());
 
 		// Cria o cliente baseado nas informações recebitas e coletadas nas APIs
-		Cliente cliente = new Cliente(nome, idade, ipVigilante.getData().getIpv4(), clima.getConsolidated_weather()[0].getMin_temp(), clima.getConsolidated_weather()[0].getMax_temp());
+		Cliente cliente = new Cliente(novo.getNome(), novo.getIdade(), ipVigilante.getData().getIpv4(), clima.getConsolidated_weather()[0].getMin_temp(), clima.getConsolidated_weather()[0].getMax_temp());
 		clienteRepository.save(cliente);
-		return new ResponseEntity<Cliente>(cliente, HttpStatus.CREATED);
+		ClienteInfoModel cli = modelMapper.map(cliente, ClienteInfoModel.class);
+		return new ResponseEntity<ClienteInfoModel>(cli, HttpStatus.OK);
 	}
 	
 	/**
@@ -90,34 +99,35 @@ public class ClienteController {
 	 * @param id ID do cliente
 	 * @return Entidade do cliente
 	 */
-	@RequestMapping(path = "/cliente", method = RequestMethod.GET)
-	public ResponseEntity<Cliente> obter(
-			@RequestParam(value="id", required=true) Long id) {
+	@RequestMapping(path = "/api/cliente/{id}", method = RequestMethod.GET)
+	public ResponseEntity<ClienteInfoModel> obter(
+			@PathVariable(value = "id") Long id) {
 		Optional<Cliente> cliente = clienteRepository.findById(id);
 		if (!cliente.isPresent())
-			return new ResponseEntity<Cliente>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<Cliente>(cliente.get(), HttpStatus.OK);
+			return new ResponseEntity<ClienteInfoModel>(HttpStatus.NOT_FOUND);
+		ClienteInfoModel cli = modelMapper.map(cliente.get(), ClienteInfoModel.class);
+		return new ResponseEntity<ClienteInfoModel>(cli, HttpStatus.OK);
 	}
 	
 	/**
 	 * Atualiza as informações de um cliente
 	 * @param id ID do cliente
-	 * @param nome Nome do cliente
-	 * @param idade Idade do cliente
+	 * @param alterado Cliente alterado
 	 * @return Entidade atualizada do cliente
 	 */
-	@RequestMapping(path = "/cliente", method = RequestMethod.PUT)
-	public ResponseEntity<Cliente> atualizar(
-			@RequestParam(value="id", required=true) Long id,
-			@RequestParam(value="nome", required=true) String nome,
-			@RequestParam(value="idade", required=true) Integer idade) {
+	@RequestMapping(path = "/api/cliente/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<ClienteInfoModel> atualizar(
+			@PathVariable(value = "id") Long id,
+			@RequestBody(required = true) ClienteModel alterado) {
 		Optional<Cliente> cliente = clienteRepository.findById(id);
 		if (!cliente.isPresent())
-			return new ResponseEntity<Cliente>(HttpStatus.NOT_FOUND);
-		cliente.get().setNome(nome);
-		cliente.get().setIdade(idade);
-		clienteRepository.save(cliente.get());
-		return new ResponseEntity<Cliente>(HttpStatus.OK); 
+			return new ResponseEntity<ClienteInfoModel>(HttpStatus.NOT_FOUND);
+		Cliente alterar = cliente.get();
+		alterar.setNome(alterado.nome);
+		alterar.setIdade(alterado.idade);
+		clienteRepository.save(alterar);
+		ClienteInfoModel cli = modelMapper.map(alterar, ClienteInfoModel.class);
+		return new ResponseEntity<ClienteInfoModel>(cli, HttpStatus.OK); 
 	}
 	
 	/**
@@ -125,13 +135,13 @@ public class ClienteController {
 	 * @param id ID do cliente
 	 * @return Vazio
 	 */
-	@RequestMapping(path = "/cliente", method = RequestMethod.DELETE)
-	public ResponseEntity<Cliente> apagar(
-			@RequestParam(value="id", required=true) Long id) {
+	@RequestMapping(path = "/api/cliente/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<ClienteInfoModel> apagar(
+			@PathVariable(value = "id") Long id) {
 		Optional<Cliente> cliente = clienteRepository.findById(id);
 		if (!cliente.isPresent())
-			return new ResponseEntity<Cliente>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<ClienteInfoModel>(HttpStatus.NOT_FOUND);
 		clienteRepository.deleteById(id);
-		return new ResponseEntity<Cliente>(HttpStatus.OK);
+		return new ResponseEntity<ClienteInfoModel>(HttpStatus.OK);
 	}
 }
