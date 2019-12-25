@@ -3,11 +3,15 @@
 
 ## Primeiros Passos
 Para que seja possível executar o código deste projeto, será necessário:
-1. [Eclipse IDE](https://www.eclipse.org)
-2. [Lombok](https://projectlombok.org)
-3. [MySQL Server](https://www.mysql.com/) (na máquina local, porta padrão)
-4. Base de dados configurada com o script disponibilizado (CRT_Cliente.sql)
-5. Certificado para utilização do IpVigilante instalado (certificado.sh)
+1. [Java](https://www.java.com)
+2. [Maven](http://maven.apache.org)
+3. Ambiente de Desenvolvimento
+3.1. [Eclipse IDE](https://www.eclipse.org)
+3.2. [Visual Studio Code](https://code.visualstudio.com)
+4. [Lombok](https://projectlombok.org)
+5. [MySQL Server](https://www.mysql.com) (na máquina local, porta 3306)
+6. Base de dados configurada com o script disponibilizado (CRT_Cliente.sql)
+7. Certificado para utilização do IpVigilante instalado (certificado.sh)
 
 ## Projeto
 Este projeto consiste na criação de um micro serviço capaz de gerenciar um cliente (criação, obtenção, alteração e deleção), seguindo os requisitos citados no DOCX. O principal sendo obter as temperaturas mínima e máxima no momento do cadastro, utilizando os serviços [IpVigilante](https://www.ipvigilante.com) e [MetaWeather](https://www.metaweather.com).
@@ -21,15 +25,15 @@ Foram realizadas apenas validações básicas. É necessário, por exemplo, real
 ### Próximos passos
 Como próximos passos, será necessário escolher uma solução de CI/CD, como por exemplo o [Jenkins](https://jenkins.io/) para criar um pipeline de build e deploy para os ambientes.
 Além disso, ficou faltando o preenchimento dos testes unitários. Porém, estou ciente de que é imprescindível para validar cada build no processo de CI.
-Outro passo que posso citar são os testes integrados, que poderia ser realizado utilizando, por exemplo, o [Selenium](https://www.seleniumhq.org/).
-Por fim, por ser uma API de cadastro, um próoximo passo seria a implementação da camada de segurança (autenticação e autorização).
+Outro passo que posso citar são os testes integrados, que poderiam ser realizados utilizando, por exemplo, o [Selenium](https://www.seleniumhq.org/).
+Por fim, por ser uma API de cadastro, um próximo passo seria a implementação da camada de segurança (autenticação e autorização).
 
 ## Endpoints
 Os endpoints criados para esse exemplo foram:
 
 * `GET - /api/cliente/{id}` - Obtém um cliente através do seu ID
 * `POST - /api/cliente` - Cria um novo cliente
-  Body: `{ "nome": "string", "idade": int }`
+  `BODY - { "nome": "string", "idade": int }`
 * `PUT - /api/cliente/{id}` - Altera as informações do cliente
-  Body: `{ "nome": "string", "idade": int }`
-* `DELETE - /api/Cliente/{id}` - Apaga um cliente através de seu ID
+  `BODY - { "nome": "string", "idade": int }`
+* `DELETE - /api/cliente/{id}` - Apaga um cliente através de seu ID
