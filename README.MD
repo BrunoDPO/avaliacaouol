@@ -6,8 +6,8 @@ Para que seja possível executar o código deste projeto, será necessário:
 1. [Java](https://www.java.com)
 2. [Maven](http://maven.apache.org)
 3. Ambiente de Desenvolvimento
-3.1. [Eclipse IDE](https://www.eclipse.org)
-3.2. [Visual Studio Code](https://code.visualstudio.com)
+   1. [Eclipse IDE](https://www.eclipse.org)
+   2. [Visual Studio Code](https://code.visualstudio.com)
 4. [Lombok](https://projectlombok.org)
 5. [MySQL Server](https://www.mysql.com) (na máquina local, porta 3306)
 6. Base de dados configurada com o script disponibilizado (CRT_Cliente.sql)
